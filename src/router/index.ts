@@ -5,6 +5,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/cadastro-adotante',
+      name: 'cadastro-adotante',
+      // Carrega o cadastro público de adotante — 15/11/2026.
+      component: () => import('../views/CadastroAdotanteView.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       // Carrega a tela ao acessar a rota de login — 15/11/2026.

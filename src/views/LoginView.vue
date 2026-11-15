@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import { autenticar } from '@/services/autenticacao'
 import { iniciarSessao } from '@/services/sessao'
 
@@ -57,5 +57,6 @@ async function enviarLogin() {
       <button type="submit" :disabled="enviando">{{ enviando ? 'Entrando...' : 'Entrar' }}</button>
       <p role="status" aria-live="polite">{{ mensagem }}</p>
     </form>
+    <RouterLink to="/cadastro-adotante">Cadastrar como adotante</RouterLink>
   </main>
 </template>

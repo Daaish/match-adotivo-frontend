@@ -17,6 +17,7 @@ const consultasParaRedirecionamento = new WeakMap<RouteLocation, {
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/', redirect: { name: 'login' } },
     {
       path: '/cadastro-adotante',
       name: 'cadastro-adotante',

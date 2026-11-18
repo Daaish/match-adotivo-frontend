@@ -58,5 +58,6 @@ async function enviarLogin() {
       <p role="status" aria-live="polite">{{ mensagem }}</p>
     </form>
     <RouterLink to="/cadastro-adotante">Cadastrar como adotante</RouterLink>
+    <p><RouterLink to="/cadastro-instituicao">Cadastrar como instituição</RouterLink></p>
   </main>
 </template>

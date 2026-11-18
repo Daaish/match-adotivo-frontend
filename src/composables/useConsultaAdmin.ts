@@ -13,7 +13,7 @@ export type ConsultaAdmin<Dados> = (sinal: AbortSignal) => Promise<ResultadoCons
 export function useConsultaAdmin<Dados>(consultar: ConsultaAdmin<Dados>) {
   const rota = useRoute()
   const roteador = useRouter()
-  const nomeRota = rota.name
+  const caminho = rota.path
   const sessao = consultarSessao()
   const controle = new AbortController()
   const dados = shallowRef<Dados>()
@@ -25,7 +25,7 @@ export function useConsultaAdmin<Dados>(consultar: ConsultaAdmin<Dados>) {
 
   // Verifica se a mesma sessão e página ainda podem receber a resposta — 18/11/2026.
   function ativo() {
-    return !controle.signal.aborted && rota.name === nomeRota && consultarSessao() === sessao
+    return !controle.signal.aborted && rota.path === caminho && consultarSessao() === sessao
   }
 
   // Repete a leitura, mantendo o estado associado à sessão que a iniciou — 18/11/2026.

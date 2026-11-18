@@ -12,7 +12,9 @@ import { RouterLink, RouterView } from 'vue-router'
       <RouterLink :to="{ name: 'admin-animais' }">Animais</RouterLink>
       <RouterLink :to="{ name: 'admin-solicitacoes' }">Solicitações</RouterLink>
     </nav>
-    <RouterView />
+    <RouterView v-slot="{ Component, route }">
+      <component :is="Component" :key="route.path" />
+    </RouterView>
   </div>
 </template>
 

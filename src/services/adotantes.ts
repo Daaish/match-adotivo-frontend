@@ -1,4 +1,4 @@
-import { consultarListaAdmin } from './consultaListaAdmin'
+import { consultarListaAdmin, operacoesAdmin } from './consultaListaAdmin'
 
 interface Adotante {
   id_adotante: number
@@ -27,3 +27,12 @@ function adotanteValido(valor: unknown): valor is Adotante {
 export function listarAdotantes(sinal: AbortSignal) {
   return consultarListaAdmin('/adotantes', sinal, adotanteValido)
 }
+
+export const tiposResidencia = ['CASA', 'APARTAMENTO', 'CHÁCARA', 'OUTRO'] as const
+export type DadosAdotante = Omit<Adotante, 'id_adotante' | 'tipo_residencia' | 'tipos_animais'> & {
+  tipo_residencia: (typeof tiposResidencia)[number]
+  tipos_animais?: string | null
+}
+export const {
+  buscar: buscarAdotante, criar: criarAdotante, editar: editarAdotante, excluir: excluirAdotante,
+} = operacoesAdmin<Adotante, DadosAdotante>('/adotantes', adotanteValido, 'id_adotante')

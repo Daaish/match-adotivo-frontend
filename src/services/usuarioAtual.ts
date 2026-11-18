@@ -2,8 +2,12 @@ const perfis = ['ADMIN', 'INSTITUICAO', 'ADOTANTE', 'SEM_PERFIL'] as const
 
 type Perfil = (typeof perfis)[number]
 
+type UsuarioAtual =
+  | { id: number; perfil: 'INSTITUICAO'; id_instituicao: number | null }
+  | { id: number; perfil: Exclude<Perfil, 'INSTITUICAO'> }
+
 export type ResultadoUsuarioAtual =
-  | { tipo: 'sucesso'; usuario: { id: number; perfil: Perfil } }
+  | { tipo: 'sucesso'; usuario: UsuarioAtual }
   | { tipo: 'sessao-invalida' }
   | { tipo: 'falha'; mensagem: string }
 
@@ -42,7 +46,13 @@ export async function consultarUsuarioAtual(token: string): Promise<ResultadoUsu
       'id' in dados && typeof dados.id === 'number' && Number.isInteger(dados.id) &&
       'perfil' in dados && perfilValido(dados.perfil)
     ) {
-      return { tipo: 'sucesso', usuario: { id: dados.id, perfil: dados.perfil } }
+      if (dados.perfil !== 'INSTITUICAO') {
+        return { tipo: 'sucesso', usuario: { id: dados.id, perfil: dados.perfil } }
+      }
+      if ('id_instituicao' in dados && (dados.id_instituicao === null ||
+        (typeof dados.id_instituicao === 'number' && Number.isSafeInteger(dados.id_instituicao) && dados.id_instituicao > 0))) {
+        return { tipo: 'sucesso', usuario: { id: dados.id, perfil: dados.perfil, id_instituicao: dados.id_instituicao } }
+      }
     }
   }
 

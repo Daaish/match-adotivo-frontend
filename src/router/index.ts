@@ -58,15 +58,37 @@ const router = createRouter({
     },
     {
       path: '/inicio/adotante',
-      name: 'inicio-adotante',
       meta: { exigeAutenticacao: true },
-      // Carrega a página inicial de adotante — 18/11/2026.
-      component: () => import('../views/InicioAdotanteView.vue'),
+      // Carrega a navegação da área do adotante — 18/11/2026.
+      component: () => import('../views/AreaAdotanteLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'inicio-adotante',
+          // Carrega a página inicial de adotante — 18/11/2026.
+          component: () => import('../views/InicioAdotanteView.vue'),
+        },
+        {
+          path: 'animais',
+          name: 'catalogo-animais',
+          meta: { exigeAdotante: true },
+          // Carrega a listagem de animais disponíveis — 18/11/2026.
+          component: () => import('../views/CatalogoAnimaisView.vue'),
+        },
+        {
+          path: 'animais/:id',
+          name: 'detalhes-animal',
+          meta: { exigeAdotante: true },
+          props: true,
+          // Carrega os detalhes do animal identificado pela rota — 18/11/2026.
+          component: () => import('../views/DetalhesAnimalView.vue'),
+        },
+      ],
     },
   ],
 })
 
-// Confere o perfil atual antes de abrir um painel e descarta respostas de outra sessão — 18/11/2026.
+// Confere o perfil para abrir a área solicitada e descarta respostas de outra sessão — 18/11/2026.
 router.beforeEach(async function verificarSessao(destino) {
   if (!destino.meta.exigeAutenticacao) return
 
@@ -87,6 +109,8 @@ router.beforeEach(async function verificarSessao(destino) {
     encerrarSessao()
     return { name: 'login' }
   }
+
+  if (destino.meta.exigeAdotante && resultado.tipo === 'sucesso' && resultado.usuario.perfil === 'ADOTANTE') return
 
   const pagina = resultado.tipo === 'sucesso' ? inicioPorPerfil[resultado.usuario.perfil] : 'inicio'
   if (destino.name !== pagina) {

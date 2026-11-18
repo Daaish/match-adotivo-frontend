@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import FotoAnimal from '@/components/FotoAnimal.vue'
 import { useConsultaAnimais } from '@/composables/useConsultaAnimais'
+import { useSolicitacaoAdocao } from '@/composables/useSolicitacaoAdocao'
 import { buscarAnimal } from '@/services/animais'
 import { formatarIdadeAnimal } from '@/utils/idadeAnimal'
 
@@ -14,6 +15,8 @@ function obterId() {
 }
 
 const { resultado, tentarNovamente } = useConsultaAnimais(obterId, buscarAnimal)
+const { estado, mensagem, podeSolicitar, enviarSolicitacao, tentarVerificarNovamente } =
+  useSolicitacaoAdocao(obterId, resultado)
 
 // Calcula a idade apenas após validar o retorno dos detalhes — 18/11/2026.
 const idade = computed(function obterIdade() {
@@ -30,7 +33,11 @@ const idade = computed(function obterIdade() {
     <p v-if="!resultado" role="status">Carregando detalhes…</p>
     <div v-else-if="resultado.tipo === 'falha'">
       <p role="alert">{{ resultado.mensagem }}</p>
-      <button v-if="resultado.permiteTentar" type="button" @click="tentarNovamente">Tentar novamente</button>
+      <button
+        v-if="resultado.permiteTentar && estado !== 'falha-consulta'"
+        type="button"
+        @click="tentarNovamente"
+      >Tentar novamente</button>
     </div>
     <template v-else-if="resultado.tipo === 'sucesso'">
       <p role="status">
@@ -48,7 +55,24 @@ const idade = computed(function obterIdade() {
         </template>
       </dl>
       <p v-if="resultado.dados.detalhes" class="detalhes">{{ resultado.dados.detalhes }}</p>
+      <button
+        v-if="resultado.dados.disponivel && (podeSolicitar || estado === 'enviando')"
+        type="button"
+        :disabled="estado === 'enviando'"
+        @click="enviarSolicitacao"
+      >
+        {{ estado === 'enviando' ? 'Solicitando…' : 'Solicitar adoção' }}
+      </button>
+      <p v-if="estado === 'verificando' && resultado.dados.disponivel" role="status">
+        Verificando solicitações…
+      </p>
     </template>
+    <p v-if="mensagem" :role="estado === 'bloqueado' || estado === 'falha-consulta' ? 'alert' : 'status'">
+      {{ mensagem }}
+    </p>
+    <button v-if="estado === 'falha-consulta'" type="button" @click="tentarVerificarNovamente">
+      Verificar solicitações novamente
+    </button>
   </main>
 </template>
 

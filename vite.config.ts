@@ -19,6 +19,7 @@ export default defineConfig({
     proxy: {
       '/usuarios': 'http://localhost:3000',
       '/animais': 'http://localhost:3000',
+      '/matches': 'http://localhost:3000',
     },
   },
 })

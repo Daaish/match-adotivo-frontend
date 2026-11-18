@@ -189,6 +189,11 @@ export function listarAnimaisDisponiveis(sinal: AbortSignal) {
   return consultarAnimais('/animais?disponivel=true', sinal, listaValida)
 }
 
+// Lista todos os animais para a consulta administrativa — 18/11/2026.
+export function listarTodosAnimais(sinal: AbortSignal) {
+  return consultarAnimais('/animais', sinal, listaValida)
+}
+
 // Valida o ID da rota e consulta o registro correspondente com a disponibilidade atual — 18/11/2026.
 export async function buscarAnimal(id: string, sinal: AbortSignal): Promise<ResultadoAnimais<DetalhesAnimal>> {
   const identificador = Number(id)

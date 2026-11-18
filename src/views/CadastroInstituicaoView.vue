@@ -40,32 +40,34 @@ async function enviarCadastro() {
 </script>
 
 <template>
-  <main>
-    <h1>Cadastrar como instituição</h1>
-    <form v-if="!cadastrado" :aria-busy="enviando" @submit.prevent="enviarCadastro">
-      <fieldset :disabled="enviando">
-        <legend>Dados da conta</legend>
-        <label for="nome-conta">Nome da conta</label>
-        <input id="nome-conta" v-model.trim="dados.usuario.nome" required minlength="3" maxlength="200" autocomplete="name" />
-        <label for="email-cadastro">E-mail</label>
-        <input id="email-cadastro" v-model="dados.usuario.email" type="email" required maxlength="255" autocomplete="username" />
-        <label for="senha-cadastro">Senha (mínimo de 8 caracteres, máximo de 72 bytes em UTF-8)</label>
-        <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" autocomplete="new-password" />
-      </fieldset>
-      <fieldset :disabled="enviando">
-        <legend>Dados da instituição</legend>
-        <label for="cnpj">CNPJ (14 dígitos, sem pontuação)</label>
-        <input id="cnpj" v-model="dados.instituicao.cnpj" required inputmode="numeric" pattern="[0-9]{14}" minlength="14" maxlength="14" />
-        <label for="razao-social">Razão social</label>
-        <input id="razao-social" v-model.trim="dados.instituicao.razao_social" required maxlength="200" autocomplete="organization" />
-        <label for="endereco">Endereço</label>
-        <input id="endereco" v-model.trim="dados.instituicao.endereco" required maxlength="255" autocomplete="street-address" />
-        <label for="foto">URL da foto (opcional)</label>
-        <input id="foto" v-model.trim="dados.instituicao.foto" type="url" maxlength="500" />
-      </fieldset>
-      <button type="submit" :disabled="enviando">{{ enviando ? 'Cadastrando...' : 'Cadastrar' }}</button>
-    </form>
-    <p role="status" aria-live="polite">{{ mensagem }}</p>
-    <RouterLink v-if="cadastrado" to="/login">Ir para o login</RouterLink>
+  <main class="pagina-publica">
+    <div class="cartao-publico">
+      <h1>Cadastrar como instituição</h1>
+      <form class="formulario-publico formulario-cadastro" v-if="!cadastrado" :aria-busy="enviando" @submit.prevent="enviarCadastro">
+        <fieldset class="grupo-publico" :disabled="enviando">
+          <legend>Dados da conta</legend>
+          <label for="nome-conta">Nome da conta</label>
+          <input id="nome-conta" v-model.trim="dados.usuario.nome" required minlength="3" maxlength="200" autocomplete="name" />
+          <label for="email-cadastro">E-mail</label>
+          <input id="email-cadastro" v-model="dados.usuario.email" type="email" required maxlength="255" autocomplete="username" />
+          <label for="senha-cadastro">Senha (mínimo de 8 caracteres, máximo de 72 bytes em UTF-8)</label>
+          <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" autocomplete="new-password" />
+        </fieldset>
+        <fieldset class="grupo-publico" :disabled="enviando">
+          <legend>Dados da instituição</legend>
+          <label for="cnpj">CNPJ (14 dígitos, sem pontuação)</label>
+          <input id="cnpj" v-model="dados.instituicao.cnpj" required inputmode="numeric" pattern="[0-9]{14}" minlength="14" maxlength="14" />
+          <label for="razao-social">Razão social</label>
+          <input id="razao-social" v-model.trim="dados.instituicao.razao_social" required maxlength="200" autocomplete="organization" />
+          <label for="endereco">Endereço</label>
+          <input id="endereco" v-model.trim="dados.instituicao.endereco" required maxlength="255" autocomplete="street-address" />
+          <label for="foto">URL da foto (opcional)</label>
+          <input id="foto" v-model.trim="dados.instituicao.foto" type="url" maxlength="500" />
+        </fieldset>
+        <button type="submit" :disabled="enviando">{{ enviando ? 'Cadastrando...' : 'Cadastrar' }}</button>
+      </form>
+      <p class="mensagem-publica" :class="{ 'mensagem-publica--sucesso': cadastrado }" role="status" aria-live="polite">{{ mensagem }}</p>
+      <RouterLink v-if="cadastrado" to="/login">Ir para o login</RouterLink>
+    </div>
   </main>
 </template>

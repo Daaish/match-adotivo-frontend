@@ -39,25 +39,29 @@ async function enviarLogin() {
 </script>
 
 <template>
-  <main>
-    <h1>Entrar no Match Adotivo</h1>
-    <p>Use seu e-mail e senha para acessar sua conta.</p>
+  <main class="pagina-publica pagina-login">
+    <div class="cartao-publico cartao-login">
+      <h1>Entrar no Match Adotivo</h1>
+      <p class="introducao-publica">Use seu e-mail e senha para acessar sua conta.</p>
 
-    <form :aria-busy="enviando" @submit.prevent="enviarLogin">
-      <div>
-        <label for="email">E-mail</label>
-        <input id="email" v-model="email" name="email" type="email" autocomplete="username" required />
+      <form class="formulario-publico" :aria-busy="enviando" @submit.prevent="enviarLogin">
+        <div class="campo-publico">
+          <label for="email">E-mail</label>
+          <input id="email" v-model="email" name="email" type="email" autocomplete="username" required />
+        </div>
+
+        <div class="campo-publico">
+          <label for="senha">Senha</label>
+          <input id="senha" v-model="senha" name="senha" type="password" autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" :disabled="enviando">{{ enviando ? 'Entrando...' : 'Entrar' }}</button>
+        <p class="mensagem-publica" role="status" aria-live="polite">{{ mensagem }}</p>
+      </form>
+      <div class="links-publicos">
+        <RouterLink to="/cadastro-adotante">Cadastrar como adotante</RouterLink>
+        <p><RouterLink to="/cadastro-instituicao">Cadastrar como instituição</RouterLink></p>
       </div>
-
-      <div>
-        <label for="senha">Senha</label>
-        <input id="senha" v-model="senha" name="senha" type="password" autocomplete="current-password" required />
-      </div>
-
-      <button type="submit" :disabled="enviando">{{ enviando ? 'Entrando...' : 'Entrar' }}</button>
-      <p role="status" aria-live="polite">{{ mensagem }}</p>
-    </form>
-    <RouterLink to="/cadastro-adotante">Cadastrar como adotante</RouterLink>
-    <p><RouterLink to="/cadastro-instituicao">Cadastrar como instituição</RouterLink></p>
+    </div>
   </main>
 </template>

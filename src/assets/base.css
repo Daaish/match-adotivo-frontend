@@ -1,0 +1,247 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  color-scheme: light;
+  --fundo: #f3f8f4;
+  --superficie: #fff;
+  --texto: #20332a;
+  --texto-secundario: #4c6255;
+  --verde: #236146;
+  --verde-hover: #174a35;
+  --verde-suave: #e4f1e8;
+  --borda: #d4e2d8;
+  --borda-campo: #7f9888;
+  --foco: #216c58;
+  --erro: #8a2834;
+  --fundo-erro: #fff0f1;
+  --raio: 0.65rem;
+  color: var(--texto);
+  background: var(--fundo);
+}
+
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+}
+
+:where(body) {
+  margin: 0;
+  min-height: 100vh;
+}
+
+:where(h1, h2, h3) {
+  line-height: 1.2;
+}
+
+:where(h1) {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.65rem, 1.3rem + 1.2vw, 2.4rem);
+  letter-spacing: -0.025em;
+}
+
+:where(a) {
+  color: var(--verde);
+  text-underline-offset: 0.18em;
+}
+
+:where(a:hover) {
+  color: var(--verde-hover);
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 3px;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+}
+
+:where(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.7rem;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borda-campo);
+  border-radius: var(--raio);
+}
+
+:where(input:user-invalid, select:user-invalid, textarea:user-invalid) {
+  border-color: var(--erro);
+}
+
+:where(input[type="checkbox"], input[type="radio"]) {
+  accent-color: var(--verde);
+}
+
+:where(textarea) {
+  resize: vertical;
+}
+
+:where(button) {
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--verde);
+  border-radius: var(--raio);
+  background: var(--verde);
+  color: var(--superficie);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+:where(button:not(:disabled):hover) {
+  background: var(--verde-hover);
+  border-color: var(--verde-hover);
+}
+
+:where(button:disabled, input:disabled, select:disabled, textarea:disabled) {
+  background: #e8eeea;
+  border-color: var(--borda);
+  color: #52645a;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+:where(p[role="alert"]:not(:empty), .mensagem-publica:not(:empty)) {
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--raio);
+  color: var(--erro);
+  background: var(--fundo-erro);
+}
+
+.mensagem-publica--sucesso:not(:empty) {
+  color: var(--verde-hover);
+  background: var(--verde-suave);
+}
+
+.mensagem-publica:empty {
+  margin: 0;
+}
+
+.pagina-publica {
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: radial-gradient(ellipse at top, #e0efe5, transparent 65%), var(--fundo);
+}
+
+.pagina-login {
+  align-items: center;
+}
+
+.cartao-publico {
+  width: min(100%, 51rem);
+  min-width: 0;
+  padding: clamp(1.25rem, 4vw, 2.65rem);
+  border: 1px solid var(--borda);
+  border-top: 4px solid var(--verde);
+  border-radius: 1.15rem;
+  background: var(--superficie);
+  box-shadow: 0 1rem 3rem #20332a12;
+}
+
+.cartao-login {
+  width: min(100%, 28rem);
+}
+
+.introducao-publica {
+  margin: 0 0 1.5rem;
+  color: var(--texto-secundario);
+}
+
+.formulario-publico,
+.campo-publico {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.formulario-publico {
+  gap: 1rem;
+}
+
+.formulario-publico :where(label, legend) {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.formulario-publico :where(input, select, button[type="submit"]) {
+  width: 100%;
+}
+
+.formulario-publico .mensagem-publica:not(:empty) {
+  margin: 0;
+}
+
+.grupo-publico {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.9rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+
+.grupo-publico legend {
+  padding-inline: 0.35rem;
+  color: var(--verde-hover);
+}
+
+.grupo-publico :where(input, select) + label {
+  margin-top: 0.45rem;
+}
+
+.links-publicos {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--borda);
+}
+
+.links-publicos p {
+  margin: 0;
+}
+
+@media (min-width: 44rem) {
+  .formulario-cadastro {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .formulario-cadastro > button {
+    grid-column: 1 / -1;
+    justify-self: end;
+    width: auto;
+    min-width: 10rem;
+  }
+}
+
+.navegacao-perfil {
+  margin-bottom: 1.5rem;
+  padding: 0.65rem;
+  border: 1px solid var(--borda);
+  border-radius: 0.85rem;
+  background: var(--superficie);
+}
+
+.navegacao-perfil a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--raio);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navegacao-perfil a:hover,
+.navegacao-perfil a[aria-current="page"] {
+  color: var(--verde-hover);
+  background: var(--verde-suave);
+}

@@ -76,6 +76,13 @@ const router = createRouter({
           component: () => import('../views/FormularioAnimalView.vue'),
         },
         {
+          path: 'solicitacoes',
+          name: 'solicitacoes-recebidas',
+          meta: { exigeInstituicao: true },
+          // Carrega os pedidos recebidos pela instituição — 18/11/2026.
+          component: () => import('../views/SolicitacoesRecebidasView.vue'),
+        },
+        {
           path: 'animais/:id/editar',
           name: 'editar-animal',
           meta: { exigeInstituicao: true },

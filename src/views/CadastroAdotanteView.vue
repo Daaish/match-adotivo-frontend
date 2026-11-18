@@ -19,9 +19,23 @@ function ajustarQuantidade() {
   if (!dados.adotante.possui_animais) dados.adotante.quantidade_animais = 0
 }
 
-// Envia o cadastro e confirma o sucesso sem iniciar uma sessão — 15/11/2026.
+// Valida senha e quantidade, envia o cadastro e confirma o sucesso — 18/11/2026.
 async function enviarCadastro() {
   if (enviando.value || cadastrado.value) return
+
+  const senha = dados.usuario.senha
+  if (senha.length < 8 || new TextEncoder().encode(senha).byteLength > 72) {
+    mensagem.value = 'A senha deve ter pelo menos 8 caracteres e até 72 bytes em UTF-8.'
+    return
+  }
+
+  const { possui_animais, quantidade_animais } = dados.adotante
+  if (!Number.isInteger(quantidade_animais) ||
+    (possui_animais ? quantidade_animais < 1 : quantidade_animais !== 0)) {
+    mensagem.value = 'Informe pelo menos um animal se possui animais, ou zero se não possui.'
+    return
+  }
+
   enviando.value = true
   mensagem.value = ''
   try {
@@ -45,8 +59,8 @@ async function enviarCadastro() {
         <input id="nome-conta" v-model.trim="dados.usuario.nome" required minlength="3" maxlength="200" autocomplete="name" />
         <label for="email-cadastro">E-mail</label>
         <input id="email-cadastro" v-model="dados.usuario.email" type="email" required maxlength="255" autocomplete="username" />
-        <label for="senha-cadastro">Senha (8 a 128 caracteres)</label>
-        <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" maxlength="128" autocomplete="new-password" />
+        <label for="senha-cadastro">Senha (mínimo de 8 caracteres, máximo de 72 bytes em UTF-8)</label>
+        <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" autocomplete="new-password" />
       </fieldset>
       <fieldset :disabled="enviando">
         <legend>Perfil do adotante</legend>
@@ -69,7 +83,7 @@ async function enviarCadastro() {
           <option :value="true">Sim</option>
         </select>
         <label for="quantidade">Quantidade de animais</label>
-        <input id="quantidade" v-model.number="dados.adotante.quantidade_animais" type="number" required min="0" step="1" :disabled="!dados.adotante.possui_animais" />
+        <input id="quantidade" v-model.number="dados.adotante.quantidade_animais" type="number" required :min="dados.adotante.possui_animais ? 1 : 0" step="1" :disabled="!dados.adotante.possui_animais" />
         <label for="tipos">Tipos de animais (opcional)</label>
         <input id="tipos" v-model.trim="dados.adotante.tipos_animais" />
       </fieldset>

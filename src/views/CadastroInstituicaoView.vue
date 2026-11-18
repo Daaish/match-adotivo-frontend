@@ -11,12 +11,18 @@ const enviando = ref(false)
 const cadastrado = ref(false)
 const mensagem = ref('')
 
-// Confere os textos após aparar espaços e envia o cadastro uma vez por tentativa — 18/11/2026.
+// Valida os dados e a senha antes de enviar uma vez por tentativa — 18/11/2026.
 async function enviarCadastro() {
   if (enviando.value || cadastrado.value) return
 
   if (dados.usuario.nome.length < 3 || !dados.instituicao.razao_social || !dados.instituicao.endereco) {
     mensagem.value = 'Informe o nome da conta com pelo menos 3 caracteres, a razão social e o endereço.'
+    return
+  }
+
+  const senha = dados.usuario.senha
+  if (senha.length < 8 || new TextEncoder().encode(senha).byteLength > 72) {
+    mensagem.value = 'A senha deve ter pelo menos 8 caracteres e até 72 bytes em UTF-8.'
     return
   }
 
@@ -43,8 +49,8 @@ async function enviarCadastro() {
         <input id="nome-conta" v-model.trim="dados.usuario.nome" required minlength="3" maxlength="200" autocomplete="name" />
         <label for="email-cadastro">E-mail</label>
         <input id="email-cadastro" v-model="dados.usuario.email" type="email" required maxlength="255" autocomplete="username" />
-        <label for="senha-cadastro">Senha (8 a 128 caracteres)</label>
-        <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" maxlength="128" autocomplete="new-password" />
+        <label for="senha-cadastro">Senha (mínimo de 8 caracteres, máximo de 72 bytes em UTF-8)</label>
+        <input id="senha-cadastro" v-model="dados.usuario.senha" type="password" required minlength="8" autocomplete="new-password" />
       </fieldset>
       <fieldset :disabled="enviando">
         <legend>Dados da instituição</legend>

@@ -1,52 +1,31 @@
-<<<<<<< HEAD
-# match-adotivo-frontend
+# Match Adotivo — Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Interface do projeto acadêmico de adoção de animais, desenvolvida com Vue, Vue Router e TypeScript.
 
-## Recommended IDE Setup
+## Requisitos
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Node.js 24.12 ou superior e npm.
+- Backend do Match Adotivo em `http://localhost:3000`, conforme o README do backend. O proxy de desenvolvimento do Vite encaminha as chamadas da interface para esse endereço.
+- Para demonstrar o painel administrativo, use uma conta ADMIN previamente preparada no banco de demonstração.
 
-## Recommended Browser Setup
+## Instalação e execução
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Na pasta do frontend, execute:
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
+```bash
+npm ci
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Abra o endereço informado pelo Vite (normalmente `http://localhost:5173/`). A página inicial encaminha para o login. Os cadastros públicos permitem criar contas de adotante e instituição. Para demonstrar os três perfis, use dados fictícios e contas de teste. A sessão fica em memória e é encerrada localmente quando a página é recarregada.
 
-```sh
+## Verificações
+
+```bash
+npm run type-check
 npm run build
+./node_modules/.bin/oxlint .
+./node_modules/.bin/eslint .
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
-=======
-# match-adotivo-frontend
->>>>>>> origin/main
+Os dois últimos comandos verificam o código sem aplicar correções. O build gera os arquivos estáticos em `dist/`. Fora do Vite, a hospedagem precisa encaminhar os caminhos da API ao backend e servir `index.html` para as rotas da interface.

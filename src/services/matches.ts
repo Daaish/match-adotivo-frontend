@@ -3,7 +3,7 @@ import { consultarSessao } from './sessao'
 const statusAtivos = ['PENDENTE', 'EM ANDAMENTO', 'APROVADO'] as const
 type StatusMatch = (typeof statusAtivos)[number] | 'CANCELADO'
 
-interface Match {
+export interface Match {
   id_match: number
   id_adotante: number
   id_animal: number
@@ -49,20 +49,27 @@ export function temSolicitacaoAtiva(matches: Match[], idAnimal: number): boolean
 async function consultarMatches<Dados>(
   sinal: AbortSignal,
   validar: (valor: unknown) => valor is Dados,
-  idAnimal?: number,
+  caminho = '/matches',
+  metodo: 'GET' | 'POST' | 'PATCH' = 'GET',
+  corpo?: { id_animal: number } | { status: 'CANCELADO' },
 ): Promise<ResultadoMatches<Dados>> {
   const sessao = consultarSessao()
   if (sinal.aborted) return { tipo: 'descartado' }
   if (!sessao) return { tipo: 'sessao-invalida' }
 
-  const enviando = idAnimal !== undefined
   const cabecalhos = { Authorization: `Bearer ${sessao.token}` }
+  const opcoes: RequestInit = metodo === 'GET'
+    ? { method: 'GET', headers: cabecalhos }
+    : {
+        method: metodo,
+        headers: { ...cabecalhos, 'Content-Type': 'application/json' },
+        body: JSON.stringify(corpo),
+      }
+  const enviando = metodo !== 'GET'
   let resposta: Response
   try {
-    resposta = await fetch(enviando ? '/matches/me' : '/matches', {
-      method: enviando ? 'POST' : 'GET',
-      headers: enviando ? { ...cabecalhos, 'Content-Type': 'application/json' } : cabecalhos,
-      body: enviando ? JSON.stringify({ id_animal: idAnimal }) : undefined,
+    resposta = await fetch(caminho, {
+      ...opcoes,
       cache: 'no-store',
       signal: sinal,
     })
@@ -75,6 +82,9 @@ async function consultarMatches<Dados>(
   if (resposta.status === 401) return { tipo: 'sessao-invalida' }
   if (resposta.status === 400) return { tipo: 'falha', mensagem: 'O servidor rejeitou os dados da solicitação.' }
   if (resposta.status === 403) return { tipo: 'falha', mensagem: 'Sua conta não tem permissão para esta operação.' }
+  if (metodo === 'PATCH' && (resposta.status === 404 || resposta.status === 409)) {
+    return { tipo: 'conflito', mensagem: 'A solicitação foi removida ou mudou de status durante o cancelamento.' }
+  }
   if (resposta.status === 404) return { tipo: 'falha', mensagem: 'O recurso solicitado não foi encontrado.' }
   if (enviando && resposta.status === 409) {
     return { tipo: 'conflito', mensagem: 'O servidor encontrou um conflito ao registrar a solicitação.' }
@@ -83,7 +93,7 @@ async function consultarMatches<Dados>(
     return { tipo: enviando ? 'ambiguo' : 'falha', mensagem: 'O servidor não conseguiu confirmar a operação.' }
   }
 
-  if (resposta.status === (enviando ? 201 : 200)) {
+  if (resposta.status === (metodo === 'POST' ? 201 : 200)) {
     let dados: unknown
     try {
       dados = await resposta.json()
@@ -111,5 +121,20 @@ export async function solicitarAdocao(idAnimal: number, sinal: AbortSignal): Pro
     return matchValido(valor) && valor.id_animal === idAnimal && valor.status === 'PENDENTE'
   }
 
-  return consultarMatches(sinal, criacaoValida, idAnimal)
+  return consultarMatches(sinal, criacaoValida, '/matches/me', 'POST', { id_animal: idAnimal })
+}
+
+// Envia somente o status e valida a identidade do match cancelado — 18/11/2026.
+export function cancelarSolicitacao(match: Match, sinal: AbortSignal): Promise<ResultadoMatches<Match>> {
+  if (!idValido(match.id_match)) {
+    return Promise.resolve({ tipo: 'falha', mensagem: 'Identificador de solicitação inválido.' })
+  }
+
+  // Confirma que a resposta corresponde à solicitação enviada e ao status esperado — 18/11/2026.
+  function cancelamentoValido(valor: unknown): valor is Match {
+    return matchValido(valor) && valor.id_match === match.id_match && valor.id_adotante === match.id_adotante &&
+      valor.id_animal === match.id_animal && valor.status === 'CANCELADO'
+  }
+
+  return consultarMatches(sinal, cancelamentoValido, `/matches/${match.id_match}/status`, 'PATCH', { status: 'CANCELADO' })
 }

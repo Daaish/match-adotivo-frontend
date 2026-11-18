@@ -7,6 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <nav aria-label="Área do adotante">
       <RouterLink :to="{ name: 'inicio-adotante' }">Início</RouterLink>
       <RouterLink :to="{ name: 'catalogo-animais' }">Catálogo de animais</RouterLink>
+      <RouterLink :to="{ name: 'minhas-solicitacoes' }">Minhas solicitações</RouterLink>
     </nav>
     <RouterView />
   </div>

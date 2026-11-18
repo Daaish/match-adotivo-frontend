@@ -44,10 +44,47 @@ const router = createRouter({
     },
     {
       path: '/inicio/admin',
-      name: 'inicio-admin',
-      meta: { exigeAutenticacao: true },
-      // Carrega a página inicial de administração — 18/11/2026.
-      component: () => import('../views/InicioAdminView.vue'),
+      meta: { exigeAutenticacao: true, exigeAdmin: true },
+      // Carrega a navegação administrativa — 18/11/2026.
+      component: () => import('../views/AreaAdminLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'inicio-admin',
+          // Carrega o início administrativo existente — 18/11/2026.
+          component: () => import('../views/InicioAdminView.vue'),
+        },
+        {
+          path: 'usuarios',
+          name: 'admin-usuarios',
+          // Carrega a lista de usuários — 18/11/2026.
+          component: () => import('../views/UsuariosAdminView.vue'),
+        },
+        {
+          path: 'instituicoes',
+          name: 'admin-instituicoes',
+          // Carrega a lista de instituições — 18/11/2026.
+          component: () => import('../views/InstituicoesAdminView.vue'),
+        },
+        {
+          path: 'adotantes',
+          name: 'admin-adotantes',
+          // Carrega a lista de adotantes — 18/11/2026.
+          component: () => import('../views/AdotantesAdminView.vue'),
+        },
+        {
+          path: 'animais',
+          name: 'admin-animais',
+          // Carrega a lista geral de animais — 18/11/2026.
+          component: () => import('../views/AnimaisAdminView.vue'),
+        },
+        {
+          path: 'solicitacoes',
+          name: 'admin-solicitacoes',
+          // Carrega a lista geral de solicitações — 18/11/2026.
+          component: () => import('../views/SolicitacoesAdminView.vue'),
+        },
+      ],
     },
     {
       path: '/inicio/instituicao',
@@ -152,6 +189,8 @@ router.beforeEach(async function verificarSessao(destino) {
     encerrarSessao()
     return { name: 'login' }
   }
+
+  if (destino.meta.exigeAdmin && resultado.tipo === 'sucesso' && resultado.usuario.perfil === 'ADMIN') return
 
   if (destino.meta.exigeAdotante && resultado.tipo === 'sucesso' && resultado.usuario.perfil === 'ADOTANTE') return
 

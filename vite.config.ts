@@ -20,6 +20,8 @@ export default defineConfig({
       '/usuarios': 'http://localhost:3000',
       '/animais': 'http://localhost:3000',
       '/matches': 'http://localhost:3000',
+      '/instituicoes': 'http://localhost:3000',
+      '/adotantes': 'http://localhost:3000',
     },
   },
 })

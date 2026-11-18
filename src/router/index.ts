@@ -11,6 +11,12 @@ const router = createRouter({
       component: () => import('../views/CadastroAdotanteView.vue'),
     },
     {
+      path: '/cadastro-instituicao',
+      name: 'cadastro-instituicao',
+      // Carrega o cadastro público de instituição — 18/11/2026.
+      component: () => import('../views/CadastroInstituicaoView.vue'),
+    },
+    {
       path: '/login',
       name: 'login',
       // Carrega a tela ao acessar a rota de login — 15/11/2026.

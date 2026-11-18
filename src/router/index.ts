@@ -67,10 +67,36 @@ const router = createRouter({
           component: () => import('../views/InstituicoesAdminView.vue'),
         },
         {
+          path: 'instituicoes/nova',
+          name: 'admin-instituicao-nova',
+          // Carrega o formulário de cadastro de instituição — 18/11/2026.
+          component: () => import('../views/FormularioInstituicaoAdminView.vue'),
+        },
+        {
+          path: 'instituicoes/:id/editar',
+          name: 'admin-instituicao-editar',
+          props: true,
+          // Carrega o formulário de edição de instituição — 18/11/2026.
+          component: () => import('../views/FormularioInstituicaoAdminView.vue'),
+        },
+        {
           path: 'adotantes',
           name: 'admin-adotantes',
           // Carrega a lista de adotantes — 18/11/2026.
           component: () => import('../views/AdotantesAdminView.vue'),
+        },
+        {
+          path: 'adotantes/novo',
+          name: 'admin-adotante-novo',
+          // Carrega o formulário de cadastro de adotante — 18/11/2026.
+          component: () => import('../views/FormularioAdotanteAdminView.vue'),
+        },
+        {
+          path: 'adotantes/:id/editar',
+          name: 'admin-adotante-editar',
+          props: true,
+          // Carrega o formulário de edição de adotante — 18/11/2026.
+          component: () => import('../views/FormularioAdotanteAdminView.vue'),
         },
         {
           path: 'animais',

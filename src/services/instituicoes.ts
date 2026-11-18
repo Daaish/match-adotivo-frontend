@@ -1,4 +1,4 @@
-import { consultarListaAdmin } from './consultaListaAdmin'
+import { consultarListaAdmin, operacoesAdmin } from './consultaListaAdmin'
 
 interface Instituicao {
   id_instituicao: number
@@ -22,3 +22,8 @@ function instituicaoValida(valor: unknown): valor is Instituicao {
 export function listarInstituicoes(sinal: AbortSignal) {
   return consultarListaAdmin('/instituicoes', sinal, instituicaoValida)
 }
+
+export type DadosInstituicao = Omit<Instituicao, 'id_instituicao' | 'foto'> & { foto?: string | null }
+export const {
+  buscar: buscarInstituicao, criar: criarInstituicao, editar: editarInstituicao, excluir: excluirInstituicao,
+} = operacoesAdmin<Instituicao, DadosInstituicao>('/instituicoes', instituicaoValida, 'id_instituicao')

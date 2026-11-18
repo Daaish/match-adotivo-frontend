@@ -7,7 +7,10 @@ const propriedades = defineProps<{
   consultar: ConsultaAdmin<Registro[]>
 }>()
 
-defineSlots<{ default(props: { registros: Registro[] }): unknown }>()
+defineSlots<{
+  acoes?(): unknown
+  default(props: { registros: Registro[]; recarregar: () => Promise<void> }): unknown
+}>()
 
 const { dados, carregando, erro, carregar } = useConsultaAdmin(propriedades.consultar)
 </script>
@@ -15,6 +18,7 @@ const { dados, carregando, erro, carregar } = useConsultaAdmin(propriedades.cons
 <template>
   <main>
     <h1>{{ titulo }}</h1>
+    <slot name="acoes" />
     <p v-if="carregando" role="status">Carregando registros…</p>
     <div v-else-if="erro">
       <p role="alert">{{ erro }}</p>
@@ -22,7 +26,7 @@ const { dados, carregando, erro, carregar } = useConsultaAdmin(propriedades.cons
     </div>
     <p v-else-if="dados?.length === 0" role="status">{{ vazio }}</p>
     <div v-else-if="dados" class="registros">
-      <slot :registros="dados" />
+      <slot :registros="dados" :recarregar="carregar" />
     </div>
   </main>
 </template>

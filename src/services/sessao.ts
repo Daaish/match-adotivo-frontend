@@ -1,16 +1,16 @@
-let token: string | null = null
+let sessao: Readonly<{ token: string }> | null = null
 
-// Inicia uma sessão apenas na memória desta página — 15/11/2026.
+// Cria uma identidade de sessão em memória a cada login — 18/11/2026.
 export function iniciarSessao(tokenValidado: string): void {
-  token = tokenValidado.trim().length > 0 ? tokenValidado : null
+  sessao = tokenValidado.trim().length > 0 ? { token: tokenValidado } : null
 }
 
-// Consulta a presença da sessão local, sem comprovar autorização no backend — 15/11/2026.
-export function consultarSessao(): boolean {
-  return token !== null
+// Entrega a sessão em memória para consultas autenticadas e comparação após a espera — 18/11/2026.
+export function consultarSessao() {
+  return sessao
 }
 
 // Remove o token da sessão em memória — 15/11/2026.
 export function encerrarSessao(): void {
-  token = null
+  sessao = null
 }

@@ -4,7 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <div class="area-admin">
-    <nav aria-label="Área de administração">
+    <nav class="navegacao-perfil" aria-label="Área de administração">
       <RouterLink :to="{ name: 'inicio-admin' }">Início</RouterLink>
       <RouterLink :to="{ name: 'admin-usuarios' }">Usuários</RouterLink>
       <RouterLink :to="{ name: 'admin-instituicoes' }">Instituições</RouterLink>

@@ -51,10 +51,39 @@ const router = createRouter({
     },
     {
       path: '/inicio/instituicao',
-      name: 'inicio-instituicao',
       meta: { exigeAutenticacao: true },
-      // Carrega a página inicial de instituição — 18/11/2026.
-      component: () => import('../views/InicioInstituicaoView.vue'),
+      // Carrega a navegação da instituição — 18/11/2026.
+      component: () => import('../views/AreaInstituicaoLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'inicio-instituicao',
+          // Carrega o início existente da instituição — 18/11/2026.
+          component: () => import('../views/InicioInstituicaoView.vue'),
+        },
+        {
+          path: 'animais',
+          name: 'meus-animais',
+          meta: { exigeInstituicao: true },
+          // Carrega a listagem de animais próprios — 18/11/2026.
+          component: () => import('../views/MeusAnimaisView.vue'),
+        },
+        {
+          path: 'animais/novo',
+          name: 'novo-animal',
+          meta: { exigeInstituicao: true },
+          // Carrega o formulário em modo de cadastro — 18/11/2026.
+          component: () => import('../views/FormularioAnimalView.vue'),
+        },
+        {
+          path: 'animais/:id/editar',
+          name: 'editar-animal',
+          meta: { exigeInstituicao: true },
+          props: true,
+          // Carrega o formulário para editar um animal próprio — 18/11/2026.
+          component: () => import('../views/FormularioAnimalView.vue'),
+        },
+      ],
     },
     {
       path: '/inicio/adotante',
@@ -118,6 +147,11 @@ router.beforeEach(async function verificarSessao(destino) {
   }
 
   if (destino.meta.exigeAdotante && resultado.tipo === 'sucesso' && resultado.usuario.perfil === 'ADOTANTE') return
+
+  if (destino.meta.exigeInstituicao && resultado.tipo === 'sucesso' && resultado.usuario.perfil === 'INSTITUICAO') {
+    destino.meta.idInstituicao = resultado.usuario.id_instituicao
+    return
+  }
 
   const pagina = resultado.tipo === 'sucesso' ? inicioPorPerfil[resultado.usuario.perfil] : 'inicio'
   if (destino.name !== pagina) {

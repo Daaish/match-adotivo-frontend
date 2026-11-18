@@ -83,6 +83,13 @@ const router = createRouter({
           // Carrega os detalhes do animal identificado pela rota — 18/11/2026.
           component: () => import('../views/DetalhesAnimalView.vue'),
         },
+        {
+          path: 'solicitacoes',
+          name: 'minhas-solicitacoes',
+          meta: { exigeAdotante: true },
+          // Carrega o histórico de solicitações do adotante — 18/11/2026.
+          component: () => import('../views/MinhasSolicitacoesView.vue'),
+        },
       ],
     },
   ],
